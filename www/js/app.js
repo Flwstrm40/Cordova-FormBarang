@@ -55,7 +55,7 @@ function tampilkanDaftarBarang() {
     var row = tbody.insertRow();
     var cellInfo = row.insertCell(0);
     cellInfo.colSpan = 5;
-    cellInfo.textContent = 'Belum ada barang yang ditambahkan.';
+    cellInfo.textContent = 'Belum ada produk yang ditambahkan.';
   }
 }
 
