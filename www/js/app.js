@@ -1,25 +1,23 @@
-document.addEventListener('deviceready', onDeviceReady, false);
+function onLoad() {
+  document.addEventListener("deviceready", onDeviceReady, false);
+}
 
 function onDeviceReady() {
   tampilkanDaftarBarang();
 }
 
 function tampilkanDaftarBarang() {
-  // Simpan daftar barang dalam Local Storage
-  var daftarBarang = JSON.parse(localStorage.getItem('daftarBarang')) || [];
+  // Cek apakah ada data dalam Local Storage
+  var daftarBarang = localStorage.getItem('daftarBarang');
 
-  // Tampilkan daftar barang pada tabel
-  var tabelBarang = document.getElementById('tabelBarang');
-  var tbody = document.getElementById('listBarang');
-  tbody.innerHTML = '';
+  // Jika ada data, tampilkan
+  if (daftarBarang) {
+    // Tampilkan daftar barang
+    var tabelBarang = document.getElementById('tabelBarang');
+    var tbody = document.getElementById('listBarang');
+    tbody.innerHTML = '';
 
-  if (daftarBarang.length === 0) {
-    // Jika daftar barang kosong, tambahkan pesan
-    var row = tbody.insertRow();
-    var cellInfo = row.insertCell(0);
-    cellInfo.colSpan = 5;
-    cellInfo.textContent = 'Belum ada barang yang ditambahkan.';
-  } else {
+    daftarBarang = JSON.parse(daftarBarang);
     daftarBarang.forEach(function (barang, index) {
       var row = tbody.insertRow();
       var cellNomor = row.insertCell(0);
@@ -42,8 +40,15 @@ function tampilkanDaftarBarang() {
 
       cellAksi.appendChild(buttonHapus);
     });
+  } else {
+    // Jika tidak ada data, tampilkan pesan
+    var row = tbody.insertRow();
+    var cellInfo = row.insertCell(0);
+    cellInfo.colSpan = 5;
+    cellInfo.textContent = 'Belum ada barang yang ditambahkan.';
   }
 }
+
 
 function simpanData() {
   var nama = document.getElementById('nama').value;

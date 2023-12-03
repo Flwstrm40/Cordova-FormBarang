@@ -8,7 +8,7 @@
    
 
   </head>
-  <body>
+  <body onload="onLoad()"">
     <div class="form-container">
       <h2>Data Barang Baru</h2>
       <form id="barangForm">
@@ -43,5 +43,11 @@
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+      // Panggil tampilkanDaftarBarang() setelah halaman dimuat
+      document.addEventListener("DOMContentLoaded", function () {
+        tampilkanDaftarBarang();
+      });
+    </script>
   </body>
 </html>
