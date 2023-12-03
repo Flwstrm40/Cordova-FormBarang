@@ -8,16 +8,14 @@ function onDeviceReady() {
 
 function tampilkanDaftarBarang() {
   // Cek apakah ada data dalam Local Storage
-  var daftarBarang = localStorage.getItem('daftarBarang');
+  var daftarBarang = JSON.parse(localStorage.getItem('daftarBarang')) || [];
 
-  // Jika ada data, tampilkan
-  if (daftarBarang) {
-    // Tampilkan daftar barang
-    var tabelBarang = document.getElementById('tabelBarang');
-    var tbody = document.getElementById('listBarang');
-    tbody.innerHTML = '';
+  // Tampilkan daftar barang
+  var tabelBarang = document.getElementById('tabelBarang');
+  var tbody = document.getElementById('listBarang');
+  tbody.innerHTML = '';
 
-    daftarBarang = JSON.parse(daftarBarang);
+  if (daftarBarang.length > 0) {
     daftarBarang.forEach(function (barang, index) {
       var row = tbody.insertRow();
       var cellNomor = row.insertCell(0);
@@ -48,6 +46,7 @@ function tampilkanDaftarBarang() {
     cellInfo.textContent = 'Belum ada barang yang ditambahkan.';
   }
 }
+
 
 
 function simpanData() {
