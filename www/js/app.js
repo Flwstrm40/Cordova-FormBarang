@@ -1,21 +1,15 @@
-function onLoad() {
-  document.addEventListener("deviceready", onDeviceReady, false);
-}
-
-function onDeviceReady() {
+document.addEventListener("DOMContentLoaded", function () {
   tampilkanDaftarBarang();
-}
+});
 
 function tampilkanDaftarBarang() {
-  // Cek apakah ada data dalam Local Storage
-  var daftarBarang = JSON.parse(localStorage.getItem('daftarBarang')) || [];
-
-  // Tampilkan daftar barang
-  var tabelBarang = document.getElementById('tabelBarang');
+  var daftarBarang = localStorage.getItem('daftarBarang');
   var tbody = document.getElementById('listBarang');
   tbody.innerHTML = '';
+  daftarBarang = JSON.parse(daftarBarang);
 
   if (daftarBarang.length > 0) {
+    var tabelBarang = document.getElementById('tabelBarang');
     daftarBarang.forEach(function (barang, index) {
       var row = tbody.insertRow();
       var cellNomor = row.insertCell(0);
@@ -29,13 +23,31 @@ function tampilkanDaftarBarang() {
       cellHarga.textContent = barang.harga;
       cellStok.textContent = barang.stok;
 
+      // Tambahkan tombol aksi (kurangi dan tambah stok)
+      var buttonKurang = document.createElement('button');
+      buttonKurang.textContent = '-';
+      buttonKurang.className = 'button-kurang';
+      buttonKurang.addEventListener('click', function () {
+        updateStok(index, -1);
+      });
+
+      var buttonTambah = document.createElement('button');
+      buttonTambah.textContent = '+';
+      buttonTambah.className = 'button-tambah';
+      buttonTambah.addEventListener('click', function () {
+        updateStok(index, 1);
+      });
+
       // Tambahkan tombol hapus dengan fungsi hapusData
       var buttonHapus = document.createElement('button');
       buttonHapus.textContent = 'Hapus';
+      buttonHapus.className = 'button-hapus';
       buttonHapus.addEventListener('click', function () {
         hapusData(index);
       });
 
+      cellAksi.appendChild(buttonKurang);
+      cellAksi.appendChild(buttonTambah);
       cellAksi.appendChild(buttonHapus);
     });
   } else {
@@ -47,41 +59,50 @@ function tampilkanDaftarBarang() {
   }
 }
 
-
-
 function simpanData() {
   var nama = document.getElementById('nama').value;
   var harga = document.getElementById('harga').value;
   var stok = document.getElementById('stok').value;
 
-  // Validasi
   if (!nama || !harga || !stok) {
     alert('Harap isi semua kolom.');
     return;
   }
 
-  // Buat objek barang baru
   var barangBaru = {
     nama: nama,
     harga: harga,
     stok: stok
   };
 
-  // Simpan ke Local Storage
   var daftarBarang = JSON.parse(localStorage.getItem('daftarBarang')) || [];
   daftarBarang.push(barangBaru);
   localStorage.setItem('daftarBarang', JSON.stringify(daftarBarang));
 
-  // Tampilkan kembali daftar barang
   tampilkanDaftarBarang();
 
-  // Bersihkan formulir
   document.getElementById('nama').value = '';
   document.getElementById('harga').value = '';
   document.getElementById('stok').value = '';
 
   alert('Data barang berhasil disimpan.');
 }
+
+function updateStok(index, delta) {
+  var tbody = document.getElementById('listBarang');
+  var stokElement = tbody.rows[index].cells[3];
+  var stok = parseInt(stokElement.textContent);
+
+  stok += delta;
+  stok = Math.max(0, stok);
+
+  stokElement.textContent = stok;
+
+  var daftarBarang = JSON.parse(localStorage.getItem('daftarBarang')) || [];
+  daftarBarang[index].stok = stok;
+  localStorage.setItem('daftarBarang', JSON.stringify(daftarBarang));
+}
+
 
 function hapusData(index) {
   // Hapus item dari Local Storage
